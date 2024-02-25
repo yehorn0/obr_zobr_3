@@ -8,9 +8,9 @@ function App() {
 		setFile(URL.createObjectURL(e.target.files[0]));
 	}
 	return (
-		<div className="App">
+		<div className="App text-center">
 			<h2>Add Image:</h2>
-			<input type="file" onChange={handleChange} />
+			<input type="file" onChange={handleChange} className="form-group"/>
 			<img src={file}/>
 		</div>
 	);
