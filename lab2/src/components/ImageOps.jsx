@@ -52,21 +52,12 @@ export default class ImageOpsContainer extends React.Component {
         })
     }
 
-    getRBBCons() {
+    getRGBCons() {
 
         return [
             {key: "Red", value: "red", default: 0},
             {key: "Green", value: "green", default: 0},
             {key: "Blue", value: "blue", default: 0}
-        ]
-    }
-
-    getHSVCons() {
-
-        return [
-            {key: "Hue", value: "hue", default: 80},
-            {key: "Saturation", value: "saturation", default: 80},
-            {key: "Value", value: "brightness", default: 80},
         ]
     }
 
@@ -83,11 +74,8 @@ export default class ImageOpsContainer extends React.Component {
         }
 
         if (type === "rgb") {
-            return this.getRBBCons().find((transform) => transform.value === key).default;
-        } else if (type === "hsv") {
-            return this.getHSVCons().find((transform) => transform.value === key).default;
+            return this.getRGBCons().find((transform) => transform.value === key).default;
         }
-
     }
 
     resetFilters(keys) {
@@ -130,80 +118,6 @@ export default class ImageOpsContainer extends React.Component {
 
     }
 
-    createHSVEffect(type) {
-        
-        const hue = {key: "hue", value: 80}
-        const saturation = {key: "saturation", value: 80}
-
-        switch(type) {
-            case "grayscale":
-                saturation.value = -70;
-                break;
-            case "sepia":
-                hue.value = 20;
-                saturation.value = -20
-                break;
-            default:
-                break;
-        }
-
-        let transforms = this.state.transforms;
-
-        // transforms = this.getUpdatedTransform(transforms, hue);
-        if(type === "grayscale") {
-            transforms = this.getUpdatedTransform(transforms, saturation);
-        } else if(type === "sepia") {
-            transforms = this.getUpdatedTransform(transforms, hue);
-            transforms = this.getUpdatedTransform(transforms, saturation);
-        }
-        
-
-        this.setState({transforms})
-
-    }
-
-    createAdvanceEffects(type) {
-
-        let transforms = this.state.transforms;
-
-        switch(type) {
-            case "cartoon":
-                const transform = {
-                    key: "cartoonify",
-                    value: "20:60"
-                }
-                transforms = this.getUpdatedTransform(transforms, transform);
-                break;
-            case "vignette":
-                const transform_v = {
-                    key: "vignette",
-                    value: "30"
-                }
-                transforms = this.getUpdatedTransform(transforms, transform_v);
-                break;
-            case "oil_painting":
-                const transform_p = {
-                    key: "oil_paint",
-                    value: "40"
-                }
-                transforms = this.getUpdatedTransform(transforms, transform_p);
-                break;
-            case "vibrance":
-                const transform_vb = {
-                    key: "vibrance",
-                    value: "70"
-                }
-                transforms = this.getUpdatedTransform(transforms, transform_vb);
-                break;
-            default:
-                break;
-
-        }
-
-        this.setState({transforms});
-        
-    }
-
     render() {
 
         console.log("Transformations : ", this.state.transforms);
@@ -232,7 +146,7 @@ export default class ImageOpsContainer extends React.Component {
                                     {this.getTransformations()}
                                 </Image>
                             </CardContent>
-                        </Card>
+                        </Card>                  
                     </Grid>
                     <Grid item xs={6}>
                         <Card>
@@ -242,7 +156,7 @@ export default class ImageOpsContainer extends React.Component {
                                         R-G-B Controls
                                     </Typography>
 
-                                    {this.getRBBCons().map((color) => {
+                                    {this.getRGBCons().map((color) => {
                                         return (
                                             <SliderComponent getSliderValue={(key) => this.getSliderValue(key, "rgb")} default={0} min={-100} max={100} keyLabel={color.key} keyValue={color.value} 
                                                 updateColorValue={(e, value, key) => this.updateColorValue(e, value, key)}  />
@@ -282,82 +196,16 @@ export default class ImageOpsContainer extends React.Component {
                             </CardContent>
                         </Card>
                     </Grid>
-
                     <Grid item xs={6}>
-                        <Card>
-                            <CardContent>
-                                <Box color="text.primary">
-                                    <Typography paragraph={true} variant="h5" align="left" component="h5">
-                                        H-S-V Controls
-                                    </Typography>
-
-                                    {this.getHSVCons().map((color) => {
-                                        return (
-                                            <SliderComponent getSliderValue={(key) => this.getSliderValue(key, "hsv")} default={0} min={-100} max={100} keyLabel={color.key} keyValue={color.value} 
-                                                updateColorValue={(e, value, key) => this.updateColorValue(e, value, key)}  />
-                                        )
-                                    })}
-
-                                    <Button variant="contained" align="left" onClick={() => this.resetFilters(["hue", "saturation", "brightness"])} color="primary">
-                                        Reset
-                                    </Button>
-                                  
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                        <Card item xs={6}>
-                            <CardContent>
-                                <Box color="text.primary">
-                                    <Typography paragraph={true} variant="h5" align="left" component="h5">
-                                        H-S-V Based Filters
-                                    </Typography>
-                                    
-                                    <Button variant="contained" align="left" onClick={() => this.createHSVEffect("grayscale")} >
-                                        Gray Scale
-                                    </Button>
-                                    <Button variant="contained" align="left" onClick={() => this.createHSVEffect("sepia")} >
-                                        Sepia
-                                    </Button>
-                                    <Button variant="contained" align="left" onClick={() => this.resetFilters(["hue", "saturation", "brightness"])} color="primary">
-                                        Reset
-                                    </Button>
-                                
-                                </Box>
-                            </CardContent>
-                        </Card>
-                    </Grid>
-                    <Grid xs={12}>
-                        <Card item xs={6}>
-                            <CardContent>
-                                <Box color="text.primary">
-                                    <Typography paragraph={true} variant="h5" align="left" component="h5">
-                                        Advance Filters By Cloudinary
-                                    </Typography>
-                                    
-                                    <Button variant="contained" align="left" onClick={() => this.createAdvanceEffects("cartoon")} >
-                                        Cartoonify
-                                    </Button>
-                                    <Button variant="contained" align="left" onClick={() => this.createAdvanceEffects("vignette")} >
-                                        Vignette
-                                    </Button>
-
-                                    <Button variant="contained" align="left" onClick={() => this.createAdvanceEffects("oil_painting")} >
-                                        Oil Painting
-                                    </Button>
-
-                                    <Button variant="contained" align="left" onClick={() => this.createAdvanceEffects("vibrance")} >
-                                        vibrance
-                                    </Button>
-
-                                    <Button variant="contained" align="left" onClick={() => this.resetFilters(["vignette", "cartoonify", "vibrance", "oil_paint"])} color="primary">
-                                        Reset
-                                    </Button>
-                                
-                                </Box>
-                            </CardContent>
-                        </Card>
+                    <Card>
+                        <CardContent>
+                            <Typography variant="body2" color="textSecondary" component="p">
+                                Monochrome Image
+                            </Typography>
+                            <Image secure={true} publicId="front_face.png" width="400" height="300" cloudName="demo" accessibility="monochrome" >
+                            </Image>
+                        </CardContent>
+                        </Card>     
                     </Grid>
                 </Grid>
                 
