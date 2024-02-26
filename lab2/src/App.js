@@ -2,8 +2,7 @@ import React from 'react';
 import './App.css';
 
 
-
-import ImageOpsContainer from './Container/ImageOps';
+import ImageOpsContainer from './components/ImageOps';
 
 function App() {
   return (
