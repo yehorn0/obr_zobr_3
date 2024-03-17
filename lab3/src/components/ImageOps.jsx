@@ -60,6 +60,14 @@ export default class ImageOpsContainer extends React.Component {
         ]
     }
 
+    getBrightnessContrastCons() {
+        return [
+            {key: "Brightness", value: "brightness", default: 0},
+            {key: "Contrast", value: "contrast", default: 0},
+        ]
+        
+    }
+
 
     getSliderValue(key, type) {
         
@@ -74,6 +82,9 @@ export default class ImageOpsContainer extends React.Component {
 
         if (type === "rgb") {
             return this.getRGBCons().find((transform) => transform.value === key).default;
+        }
+        if (type === "bc") {
+            return this.getBrightnessContrastCons().find((transform) => transform.value === key).default;
         }
     }
 
@@ -168,6 +179,25 @@ export default class ImageOpsContainer extends React.Component {
                                 
                                 </Box>
                             </CardContent>
+                            <CardContent>
+                                <Box color="text.primary">
+                                    <Typography paragraph={true} variant="h5" align="left" component="h5">
+                                        Brightness / Contrast Controls
+                                    </Typography>
+
+                                    {this.getBrightnessContrastCons().map((color) => {
+                                        return (
+                                            <SliderComponent getSliderValue={(key) => this.getSliderValue(key, "bc")} default={0} min={-100} max={100} keyLabel={color.key} keyValue={color.value} 
+                                                updateColorValue={(e, value, key) => this.updateColorValue(e, value, key)}  />
+                                        )
+                                    })}
+
+                                    <Button variant="contained" align="left" onClick={() => this.resetFilters(["brightness", "contrast"])} color="primary">
+                                        Reset
+                                    </Button>
+                                
+                                </Box>
+                            </CardContent>                            
                         </Card>
                     </Grid>
                     <Grid item xs={6}>
@@ -194,17 +224,6 @@ export default class ImageOpsContainer extends React.Component {
                                 </Box>
                             </CardContent>
                         </Card>
-                    </Grid>
-                    <Grid item xs={6}>
-                    <Card>
-                        <CardContent>
-                            <Typography variant="body2" color="textSecondary" component="p">
-                                Monochrome Image
-                            </Typography>
-                            <Image secure={true} publicId="front_face.png" width="400" height="300" cloudName="demo" accessibility="monochrome" >
-                            </Image>
-                        </CardContent>
-                        </Card>     
                     </Grid>
                 </Grid>
                 
