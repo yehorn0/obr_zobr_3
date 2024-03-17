@@ -34,8 +34,8 @@ export default class ImageOpsContainer extends React.Component {
     }
 
     getUpdatedTransform(transforms, transform) {
-
-        const newTransforms = transforms.filter(({key}) => key !== transform.key)
+        
+        const newTransforms = transforms.filter(({key}) => key !== transform.key);
         
         newTransforms.push(transform);
 
@@ -45,7 +45,6 @@ export default class ImageOpsContainer extends React.Component {
     
 
     getTransformations() {
-
         return this.state.transforms.map((tranform) => {
 
             return ( <Transformation effect={`${tranform.key}:${tranform.value}`} gravity="center" crop="fill" />)
